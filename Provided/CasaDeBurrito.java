@@ -125,7 +125,7 @@ public class CasaDeBurritoImpl implements CasaDeBurrito{
      * */
     CasaDeBurrito rate(Profesor p, int r)
             throws RateRangeException{
-        if(r<0 || r>5) throw RateRangeException;
+        if(r<0 || r>5) throw new RateRangeException();
         if(!isRatedBy(p)){
             this.numberOfRates++;
         }else{
