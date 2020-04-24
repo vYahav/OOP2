@@ -15,7 +15,7 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
         this.name=name1;
         this.menu=menu1;
         this.numberOfRates=0;
-        this.sumOfRates=0;
+        this.sumOfRates=0;//test
     }
     /**
      * @return the id of the casa de burrito.
