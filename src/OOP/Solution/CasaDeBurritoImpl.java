@@ -34,7 +34,7 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
     /**
      * @return the distance from the Technion.*/
     public int distance(){
-        return 0;
+        return this.distance;
     }
 
     /**
@@ -99,14 +99,23 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
      * */
     @Override
     public boolean equals(Object o) {// לפי ה"חוזה" שבתרגול
-     return true;
+        if (!(o instanceof CasaDeBurrito)) return false;
+        CasaDeBurrito other=(CasaDeBurrito) o;
+        return this.ID==other.getId();
     }
     @Override
     public String toString(){
-        return null;
+        String menuText="";
+        //TODO: put menu items into menuText like this:"Cola, French Fries, Steak"
+        String text= "CasaDeBurrito: "+this.getName()+".\n"+
+                    "Id: " + this.getId() + ".\n"+
+                    "Distance: "+this.distance()+".\n"+
+                    "Menu: "+menuText +".";
+        return text;
     }
     @Override
     public int compareTo(CasaDeBurrito c){
+        //TODO: finish this according to the instructions.
     return 0;
     }
 
