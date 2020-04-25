@@ -88,7 +88,9 @@ public class ProfesorImpl implements Profesor{
      * */
     public Collection<CasaDeBurrito> favoritesByRating(int rLimit){
         return this.favorite_resturants.stream()
-                .filter(s->(s.averageRating()>rLimit))
+                .filter(s->(s.averageRating()>=rLimit))
+                .sorted((s1,s2)-> s2.getId()-s1.getId())
+                .sorted((s1,s2)->s2.distance()-s1.distance())
                 .sorted((s1,s2)-> (int)(s1.averageRating()-s2.averageRating()))
                 .collect(Collectors.toList());
     }
@@ -99,7 +101,8 @@ public class ProfesorImpl implements Profesor{
      * */
     public Collection<CasaDeBurrito> favoritesByDist(int dLimit){
         return this.favorite_resturants.stream()
-                .filter(s->(s.distance()>dLimit))
+                .filter(s->(s.distance()<=dLimit))
+                .sorted((s1,s2)-> s2.getId()-s1.getId())
                 .sorted((s1,s2)-> (int)(s1.averageRating()-s2.averageRating()))
                 .sorted(Comparator.comparingInt(CasaDeBurrito::distance))
                 .collect(Collectors.toList());

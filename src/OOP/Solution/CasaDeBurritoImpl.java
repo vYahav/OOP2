@@ -1,6 +1,7 @@
 package OOP.Solution;
 import OOP.Provided.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 //------------ CasaDeBurritoImpl ------------//
 
@@ -79,6 +80,14 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
         return (double)this.sumOfRates/(double)this.numberOfRates;
     }
 
+    @Override
+    public boolean equals(Object o) {// לפי ה"חוזה" שבתרגול
+        if (!(o instanceof CasaDeBurrito)) return false;
+        CasaDeBurrito other=(CasaDeBurrito) o;
+        return this.ID==other.getId();
+    }
+
+
     /**
      * @return the CasaDeBurrito's description as a string in the following format:
      * <format>
@@ -97,26 +106,30 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
      * Distance: 5.
      * Menu: Cola, French Fries, Steak.
      * */
-    @Override
-    public boolean equals(Object o) {// לפי ה"חוזה" שבתרגול
-        if (!(o instanceof CasaDeBurrito)) return false;
-        CasaDeBurrito other=(CasaDeBurrito) o;
-        return this.ID==other.getId();
-    }
+
     @Override
     public String toString(){
         String menuText="";
-        //TODO: put menu items into menuText like this:"Cola, French Fries, Steak"
-        String text= "CasaDeBurrito: "+this.getName()+".\n"+
+        List<String> menu_list=menu.stream()
+                .sorted(Comparator.naturalOrder())
+                .collect(Collectors.toList());
+        for(String i:menu_list){
+            menuText.concat(i+", ");
+        }
+        if (menuText.length() > 0 && menuText.charAt(menuText.length() - 1) == ' ') {
+            menuText = menuText.substring(0, menuText.length() - 1);
+        }
+
+        return      "CasaDeBurrito: "+this.getName()+".\n"+
                     "Id: " + this.getId() + ".\n"+
                     "Distance: "+this.distance()+".\n"+
                     "Menu: "+menuText +".";
-        return text;
     }
+
     @Override
     public int compareTo(CasaDeBurrito c){
-        //TODO: finish this according to the instructions.
-    return 0;
+        int diff=this.ID - c.getId();
+        return diff;
     }
 
 
