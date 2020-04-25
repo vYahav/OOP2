@@ -9,7 +9,7 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
     String name;
     Hashtable<Profesor,Integer> ratings;
     Set<String> menu;
-    CasaDeBurritoImpl(int id1, String name1, int dist1, Set<String> menu1){
+    public CasaDeBurritoImpl(int id1, String name1, int dist1, Set<String> menu1){
         this.ratings = new Hashtable<Profesor,Integer>();
         this.distance=dist1;
         this.name=name1;
