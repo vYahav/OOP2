@@ -13,7 +13,7 @@ import java.util.Set;
  * the two.
  * */
 public interface CartelDeNachos {
-nn
+
     class ImpossibleConnectionException     extends Exception {}
 
     /**
