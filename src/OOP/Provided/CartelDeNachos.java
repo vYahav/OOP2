@@ -15,7 +15,7 @@ import java.util.Set;
 public interface CartelDeNachos {
 
     class ImpossibleConnectionException     extends Exception {}
-
+aaaaa
     /**
      * add a profesor to the cartel.
      *
