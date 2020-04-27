@@ -3,8 +3,13 @@ import OOP.Provided.*;
 import java.util.*;
 
 public class CartelDeNachosImpl implements CartelDeNachos{
+    Hashtable<Integer,Profesor> profesors;//key=id, value= Profesor object
+    Hashtable<Integer,CasaDeBurrito> resturants; //key=id, value= CasaDeBurrito object
+
 
     public CartelDeNachosImpl(){
+        profesors = new Hashtable<>();
+        resturants = new Hashtable<>();
 
     }
 
@@ -19,7 +24,10 @@ public class CartelDeNachosImpl implements CartelDeNachos{
      * */
     public Profesor joinCartel(int id, String name)
             throws Profesor.ProfesorAlreadyInSystemException{
-        return null;
+        if(profesors.containsKey(id)) throw new Profesor.ProfesorAlreadyInSystemException();
+        Profesor prof=new ProfesorImpl(id,name);
+        profesors.put(id,prof);
+        return profesors.get(id);
     }
 
     /**
@@ -32,21 +40,26 @@ public class CartelDeNachosImpl implements CartelDeNachos{
      * */
     public CasaDeBurrito addCasaDeBurrito(int id, String name, int dist, Set<String> menu)
             throws CasaDeBurrito.CasaDeBurritoAlreadyInSystemException{
-        return null;
+        if(resturants.containsKey(id)) throw new CasaDeBurrito.CasaDeBurritoAlreadyInSystemException();
+        CasaDeBurrito rest=new CasaDeBurritoImpl(id,name,dist,menu);
+        resturants.put(id,rest);
+        return resturants.get(id);
     }
 
     /**
      * @return a collection of all profesores in the cartel
      * */
     public Collection<Profesor> registeredProfesores(){
-        return null;
+        Set<Profesor> newSet=new HashSet<>(profesors.values());
+        return newSet;
     }
 
     /**
      * @return a collection of all casas de burrito in the cartel
      * */
     public Collection<CasaDeBurrito> registeredCasasDeBurrito(){
-        return null;
+        Set<CasaDeBurrito> newSet=new HashSet<>(resturants.values());
+        return newSet;
     }
 
     /**
@@ -55,7 +68,13 @@ public class CartelDeNachosImpl implements CartelDeNachos{
      * */
     public Profesor getProfesor(int id)
             throws Profesor.ProfesorNotInSystemException{
-        return null;
+
+        if(profesors.containsKey(id)) {
+            return profesors.get(id);
+        }
+        else{
+            throw new Profesor.ProfesorNotInSystemException();
+        }
     }
 
     /**
@@ -64,7 +83,13 @@ public class CartelDeNachosImpl implements CartelDeNachos{
      * */
     public CasaDeBurrito getCasaDeBurrito(int id)
             throws CasaDeBurrito.CasaDeBurritoNotInSystemException{
-        return null;
+
+        if(resturants.containsKey(id)) {
+            return resturants.get(id);
+        }
+        else{
+            throw new CasaDeBurrito.CasaDeBurritoNotInSystemException();
+        }
     }
 
     /**
@@ -77,7 +102,17 @@ public class CartelDeNachosImpl implements CartelDeNachos{
      * */
     public CartelDeNachos addConnection(Profesor p1, Profesor p2)
             throws Profesor.ProfesorNotInSystemException, Profesor.ConnectionAlreadyExistsException, Profesor.SameProfesorException{
-        return null;
+        int id1=p1.getId();
+        int id2=p2.getId();
+        if(id1==id2) throw new Profesor.SameProfesorException();
+        if(!profesors.containsKey(id1) || !profesors.containsKey(id2)) throw new Profesor.ProfesorNotInSystemException();
+        if(profesors.get(id1).getFriends().contains(p2) || profesors.get(id2).getFriends().contains(p1)){
+            throw new Profesor.ConnectionAlreadyExistsException();
+        }
+        profesors.get(id1).addFriend(p2);
+        profesors.get(id2).addFriend(p1);
+
+        return this;
     }
 
     /**
