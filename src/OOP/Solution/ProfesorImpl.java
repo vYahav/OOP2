@@ -162,4 +162,10 @@ public class ProfesorImpl implements Profesor{
     public int hashCode(){
         return this.ID;
     }
+
+
+    //Extras
+    public void rate(CasaDeBurrito r){
+        this.rated_resturants.add(r);
+    }
 }
