@@ -34,7 +34,7 @@ public class Part1Test {
         Profesor p3 = new ProfesorImpl(10, "p3");
 
         try {
-             network.rate(p1, 6);
+            network.rate(p1, 6);
         } catch (RateRangeException e) {
         }
 

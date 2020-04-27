@@ -78,6 +78,8 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
      * @return the CasaDeBurrito's average rating
      * */
     public double averageRating(){
+
+        if(this.numberOfRates==0) return 0;
         return (double)this.sumOfRates/(double)this.numberOfRates;
     }
 
