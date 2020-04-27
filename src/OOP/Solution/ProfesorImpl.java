@@ -7,13 +7,12 @@ import java.util.stream.Collectors;
 public class ProfesorImpl implements Profesor{
     int ID;
     String name;
-    HashSet<CasaDeBurrito> rated_resturants,favorite_resturants;
+    HashSet<CasaDeBurrito> favorite_resturants;
     HashSet<Profesor> friends;
 
     public ProfesorImpl(int id1, String name1){
         this.ID=id1;
         this.name=name1;
-        rated_resturants=new HashSet<>();
         favorite_resturants=new HashSet<>();
         friends=new HashSet<>();
     }
@@ -32,7 +31,7 @@ public class ProfesorImpl implements Profesor{
      * */
     public Profesor favorite(CasaDeBurrito c)
             throws UnratedFavoriteCasaDeBurritoException{
-        if(!this.rated_resturants.contains(c)) throw new UnratedFavoriteCasaDeBurritoException();
+        if(!c.isRatedBy(this)) throw new UnratedFavoriteCasaDeBurritoException();
         favorite_resturants.add(c);
         return this;
     }
@@ -91,7 +90,7 @@ public class ProfesorImpl implements Profesor{
                 .filter(s->(s.averageRating()>=rLimit))
                 .sorted((s1,s2)-> s2.getId()-s1.getId())
                 .sorted((s1,s2)->s2.distance()-s1.distance())
-                .sorted((s1,s2)-> (int)(s1.averageRating()-s2.averageRating()))
+                .sorted((s1,s2)-> (int) (s2.averageRating()-s1.averageRating()))
                 .collect(Collectors.toList());
     }
 
@@ -131,10 +130,10 @@ public class ProfesorImpl implements Profesor{
                 .collect(Collectors.toList());
         String favs="";
         for(CasaDeBurrito i:favorites_list){
-            favs.concat(i.getName()+", ");
+            favs= favs + (i.getName()+", ");
         }
-        if (favs.length() > 0 && favs.charAt(favs.length() - 1) == ' ') {
-            favs = favs.substring(0, favs.length() - 1);
+        if (favs.length() > 0 && favs.charAt(favs.length() - 2) == ',') {
+            favs = favs.substring(0, favs.length() - 2);
         }
         return "Profesor: "+this.name+".\n"
                 +"Id: "+ this.ID + ".\n"
@@ -164,8 +163,4 @@ public class ProfesorImpl implements Profesor{
     }
 
 
-    //Extras
-    public void rate(CasaDeBurrito r){
-        this.rated_resturants.add(r);
-    }
 }

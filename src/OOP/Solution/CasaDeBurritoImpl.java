@@ -125,10 +125,10 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
                 .sorted(Comparator.naturalOrder())
                 .collect(Collectors.toList());
         for(String i:menu_list){
-            menuText.concat(i+", ");
+            menuText= menuText+ (i+", ");
         }
-        if (menuText.length() > 0 && menuText.charAt(menuText.length() - 1) == ' ') {
-            menuText = menuText.substring(0, menuText.length() - 1);
+        if (menuText.length() > 0 && menuText.charAt(menuText.length() - 2) == ',') {
+            menuText = menuText.substring(0, menuText.length() - 2);
         }
 
         return      "CasaDeBurrito: "+this.getName()+".\n"+

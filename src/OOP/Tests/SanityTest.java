@@ -365,7 +365,7 @@ public class SanityTest {
                 "1 -> [2].\n" +
                 "2 -> [1].\n" +
                 "End profesores.";
-        assertEquals(profStr, cartel.toString());
+        assertEquals(profStr,cartel.toString());
     }
 
     @Test
