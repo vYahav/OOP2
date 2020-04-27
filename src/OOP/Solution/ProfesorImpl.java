@@ -146,4 +146,20 @@ public class ProfesorImpl implements Profesor{
         int diff=this.ID - profesor.getId();
         return diff;
     }
+
+
+    protected boolean eq(Object o) {
+        if (!(o instanceof Profesor)) return false;
+        Profesor other=(Profesor) o;
+        return this.ID==other.getId();
+    }
+
+    @Override
+    public boolean equals(Object o) {// לפי ה"חוזה" שבתרגול
+        return ((this.eq(o)) && ((ProfesorImpl)o).eq(this));
+    }
+    @Override
+    public int hashCode(){
+        return this.ID;
+    }
 }

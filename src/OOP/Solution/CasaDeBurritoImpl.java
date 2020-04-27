@@ -11,6 +11,7 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
     Hashtable<Profesor,Integer> ratings;
     Set<String> menu;
     public CasaDeBurritoImpl(int id1, String name1, int dist1, Set<String> menu1){
+        this.ID=id1;
         this.ratings = new Hashtable<Profesor,Integer>();
         this.distance=dist1;
         this.name=name1;
@@ -80,13 +81,21 @@ public class CasaDeBurritoImpl implements CasaDeBurrito {
         return (double)this.sumOfRates/(double)this.numberOfRates;
     }
 
-    @Override
-    public boolean equals(Object o) {// לפי ה"חוזה" שבתרגול
+
+    protected boolean eq(Object o) {
         if (!(o instanceof CasaDeBurrito)) return false;
         CasaDeBurrito other=(CasaDeBurrito) o;
         return this.ID==other.getId();
     }
 
+        @Override
+    public boolean equals(Object o) {// לפי ה"חוזה" שבתרגול
+        return ((this.eq(o)) && ((CasaDeBurritoImpl)o).eq(this));
+    }
+    @Override
+    public int hashCode(){
+        return this.ID;
+    }
 
     /**
      * @return the CasaDeBurrito's description as a string in the following format:
