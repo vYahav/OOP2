@@ -276,7 +276,7 @@ public class CartelDeNachosImplTest {
 
     @Test
     public void favoritesByRating1(){
-        
+
 
     }
 

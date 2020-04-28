@@ -158,31 +158,38 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         if (t < 0) throw new CartelDeNachos.ImpossibleConnectionException();
 
       /** BFS **/
-
+        class ProfGraph{ /** we need to know the level of each prof **/
+            Profesor prof;
+            int level ;
+            ProfGraph(Profesor prof, int level){
+                this.prof = prof;
+                this.level = level;
+            }
+        }
         Set<Integer> visited = new LinkedHashSet<Integer>();//all the visited prof by id
-        Queue<Profesor> queue = new LinkedList<Profesor>();
-        queue.add(p);
+        Queue<ProfGraph> queue = new LinkedList<ProfGraph>();
+        queue.add(new ProfGraph(p,0));
         visited.add(p.getId());
 
         while (!queue.isEmpty()) {
-            Profesor profesor = queue.poll();
-            if (profesor.favorites().contains(c))
+            ProfGraph profesor = queue.poll();
+            if(profesor.level > t) return false; /** bfs search by levels orders so if we get
+             high level we done **/
+            if (profesor.prof.favorites().contains(c))
                 return true;
 
-            t--;
-            if (t >=0) {
-                for (Profesor pr_friend : profesor.getFriends()) {
-                    if (!visited.contains(pr_friend.getId())) {
-                        visited.add(pr_friend.getId());
-                        queue.add(pr_friend);
-                    }
-
+            for (Profesor pr_friend : profesor.prof.getFriends()) {
+                if (!visited.contains(pr_friend.getId())) {
+                    visited.add(pr_friend.getId());
+                    queue.add(new ProfGraph( pr_friend, profesor.level + 1 ) );
                 }
             }
         }
-
         return  false;
     }
+
+
+
 
 
     public List<Integer> getMostPopularRestaurantsIds() {
