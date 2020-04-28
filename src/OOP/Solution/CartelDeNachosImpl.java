@@ -93,13 +93,14 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         if(!profesors.containsKey(p.getId()))
             throw new Profesor.ProfesorNotInSystemException();
 
+        p=getProfesor(p.getId());
         ArrayList<CasaDeBurrito> restaurant_list=new ArrayList<>();
         List<Profesor> p_friends=p.getFriends().stream()
-                .sorted((s1,s2)-> s2.getId()-s1.getId())
+                .sorted(Comparator.comparingInt(Profesor::getId))
                 .collect(Collectors.toList());
 
         Collection<CasaDeBurrito> curr_restaurants;
-        for(Profesor friend : p_friends){
+        for(Profesor friend : p_friends){ //Iterate through friends and get each fav restaurants sorted by rating
             curr_restaurants=friend.favoritesByRating(0);
             for(CasaDeBurrito rest : curr_restaurants){
                 if(!restaurant_list.contains(rest)){
@@ -113,6 +114,7 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         return restaurant_list;
     }
 
+
     /**
      * returns a collection of casas de burrito favored by the friends of the received profesor,
      * ordered by distance from the Technion
@@ -125,14 +127,15 @@ public class CartelDeNachosImpl implements CartelDeNachos{
             throw new Profesor.ProfesorNotInSystemException();
         }
 
+        p=getProfesor(p.getId());
         ArrayList<CasaDeBurrito> restaurant_list=new ArrayList<>();
         List<Profesor> p_friends=p.getFriends().stream()
-                .sorted((s1,s2)-> s2.getId()-s1.getId())
+                .sorted(Comparator.comparingInt(Profesor::getId))
                 .collect(Collectors.toList());
 
         Collection<CasaDeBurrito> curr_restaurants;
-        for(Profesor friend : p_friends){
-            curr_restaurants=friend.favoritesByDist(0);
+        for(Profesor friend : p_friends){ //Iterate through friends and get each fav restaurants and sort by dist
+            curr_restaurants=friend.favoritesByDist(Integer.MAX_VALUE);
             for(CasaDeBurrito rest : curr_restaurants){
                 if(!restaurant_list.contains(rest)){
                     restaurant_list.add(rest);
@@ -146,15 +149,7 @@ public class CartelDeNachosImpl implements CartelDeNachos{
 
     }
 
-    /**
-     * check whether the casa de burrito received is t-recommended by the received profesor (definition in the PDF)
-     *
-     * @param p - the profesor (dis)recommending the casa de burrito
-     * @param c - the casa de burrito being (dis)recommended
-     * @param t - the limit in the t-recommendation
-     *
-     * @return whether s t-recommends r
-     * */
+
     public boolean getRecommendation(Profesor p, CasaDeBurrito c, int t)
             throws Profesor.ProfesorNotInSystemException, CasaDeBurrito.CasaDeBurritoNotInSystemException, CartelDeNachos.ImpossibleConnectionException {
         //errors
@@ -162,32 +157,34 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         if (!resturants.contains(c)) throw new CasaDeBurrito.CasaDeBurritoNotInSystemException();
         if (t < 0) throw new CartelDeNachos.ImpossibleConnectionException();
 
-        //good
+      /** BFS **/
 
-        Set<Integer> visited = new LinkedHashSet<Integer>();
+        Set<Integer> visited = new LinkedHashSet<Integer>();//all the visited prof by id
         Queue<Profesor> queue = new LinkedList<Profesor>();
         queue.add(p);
         visited.add(p.getId());
 
         while (!queue.isEmpty()) {
             Profesor profesor = queue.poll();
-            if (profesor.favorites().contains(c)) return true;
+            if (profesor.favorites().contains(c))
+                return true;
+
             t--;
-            if (t >= 0) {
-                for (Profesor pr_friend : p.getFriends()) {
+            if (t >=0) {
+                for (Profesor pr_friend : profesor.getFriends()) {
                     if (!visited.contains(pr_friend.getId())) {
                         visited.add(pr_friend.getId());
                         queue.add(pr_friend);
                     }
+
                 }
             }
         }
+
         return  false;
     }
 
-    /**
-     * @return a list of the most popular casas-de-burrito's ids in the cartel.
-     * */
+
     public List<Integer> getMostPopularRestaurantsIds() {
         class CasaWithScore  {
             CasaDeBurrito casa;
@@ -203,8 +200,8 @@ public class CartelDeNachosImpl implements CartelDeNachos{
 
         for (Profesor profesor : this.profesors.values()) { //all the profesor
             for (Profesor pr_friend : profesor.getFriends()){ // all the friends of a given profesor
-                for (CasaDeBurrito casa : profesor.favorites()){ // all the favorite resturants of a given proffesor
-                    CasaWithScore old_casa = casas.putIfAbsent(casa.getId() , new CasaWithScore(casa,0));
+                for (CasaDeBurrito casa : pr_friend.favorites()){ // all the favorite resturants of a given friend of a profesor
+                    CasaWithScore old_casa = casas.putIfAbsent(casa.getId() , new CasaWithScore(casa,1));
                     if( old_casa != null) //the casa exists already
                         old_casa.score= old_casa.score + 1 ;
                 }
@@ -213,7 +210,8 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         // now we have a map with id of casa and casascore.
 
         if(casas.isEmpty()) //in case the casa are empty
-            return  new LinkedList<>();;
+            return  new LinkedList<>();
+        /** sorting and filtering the map to get the list **/
         Comparator<CasaWithScore> comparator = Comparator.comparingInt(c -> c.score);
         CasaWithScore c = casas.values().stream().max(comparator).get();
         int max = c.score;
@@ -224,30 +222,7 @@ public class CartelDeNachosImpl implements CartelDeNachos{
 
     }
 
-    /**
-     * @return the cartel's description as a string in the following format:
-     * <format>
-     * Registered profesores: <profesorId1, profesorId2, profesorId3...>.
-     * Registered casas de burrito: <casaId1, casaId2, casaId3...>.
-     * Profesores:
-     * <profesor1Id> -> [<friend1Id, friend2Id, friend3Id...>].
-     * <profesor2Id> -> [<friend1Id, friend2Id, friend3Id...>].
-     * ...
-     * End profesores.
-     * </format>
-     * No newline at the end of the string.
-     * Note: profesores, casas de burrito and friends' ids are ordered by natural integer order, asc.
-     *
-     * Example:
-     *
-     * Registered profesores: 1, 236703, 555555.
-     * Registered casas de burrito: 12, 13.
-     * Profesores:
-     * 1 -> [236703, 555555555].
-     * 236703 -> [1].
-     * 555555 -> [1].
-     * End profesores.
-     * */
+
     @Override
     public String toString(){
         //Start string

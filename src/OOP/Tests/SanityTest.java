@@ -359,6 +359,7 @@ public class SanityTest {
             exp_counter++;
         }
         assertEquals(12, exp_counter);
+        assertEquals(12, exp_counter);
         String profStr = "Registered profesores: 1, 2.\n" +
                 "Registered casas de burrito: 2.\n" +
                 "Profesores:\n" +
