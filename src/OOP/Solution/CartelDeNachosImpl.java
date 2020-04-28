@@ -16,13 +16,7 @@ public class CartelDeNachosImpl implements CartelDeNachos{
 
 
 
-    /**
-     * add a profesor to the cartel.
-     *
-     * @param id - the id of the profesor
-     * @param name - the name of the profesor
-     * @return the Profesor added
-     * */
+
     public Profesor joinCartel(int id, String name)
             throws Profesor.ProfesorAlreadyInSystemException{
         if(profesors.containsKey(id)) throw new Profesor.ProfesorAlreadyInSystemException();
@@ -31,14 +25,7 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         return profesors.get(id);
     }
 
-    /**
-     * add a casa de burrito to the cartel
-     * @param id - the id of the casa de burrito
-     * @param name - the name of the casa de burrito
-     * @param dist - the distance of the casa de burrito from the Technion
-     * @param menu - the set of menu items of the casa de burrito
-     * @return the CasaDeBurrito added
-     * */
+
     public CasaDeBurrito addCasaDeBurrito(int id, String name, int dist, Set<String> menu)
             throws CasaDeBurrito.CasaDeBurritoAlreadyInSystemException{
         if(resturants.containsKey(id)) throw new CasaDeBurrito.CasaDeBurritoAlreadyInSystemException();
@@ -47,26 +34,19 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         return resturants.get(id);
     }
 
-    /**
-     * @return a collection of all profesores in the cartel
-     * */
+
     public Collection<Profesor> registeredProfesores(){
         Set<Profesor> newSet=new HashSet<>(profesors.values());
         return newSet;
     }
 
-    /**
-     * @return a collection of all casas de burrito in the cartel
-     * */
+
     public Collection<CasaDeBurrito> registeredCasasDeBurrito(){
         Set<CasaDeBurrito> newSet=new HashSet<>(resturants.values());
         return newSet;
     }
 
-    /**
-     * @return the profesor in the cartel by the id given
-     * @param id - the id of the profesor to look for in the cartel
-     * */
+
     public Profesor getProfesor(int id)
             throws Profesor.ProfesorNotInSystemException{
 
@@ -78,10 +58,7 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         }
     }
 
-    /**
-     * @return the casa de burrito in the cartel by the id given
-     * @param id - the id of the casa de burrito to look for in the cartel
-     * */
+
     public CasaDeBurrito getCasaDeBurrito(int id)
             throws CasaDeBurrito.CasaDeBurritoNotInSystemException{
 
@@ -93,40 +70,28 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         }
     }
 
-    /**
-     * add a connection of friendship between the two profesores received.
-     * friendship is a symmetric relation!
-     *
-     * @return the object to allow concatenation of function calls.
-     * @param p1 - the first profesor
-     * @param p2 - the second profesor
-     * */
+
     public CartelDeNachos addConnection(Profesor p1, Profesor p2)
             throws Profesor.ProfesorNotInSystemException, Profesor.ConnectionAlreadyExistsException, Profesor.SameProfesorException{
+
         int id1=p1.getId();
         int id2=p2.getId();
-        if(id1==id2) throw new Profesor.SameProfesorException();
         if(!profesors.containsKey(id1) || !profesors.containsKey(id2)) throw new Profesor.ProfesorNotInSystemException();
+        if(id1==id2) throw new Profesor.SameProfesorException();
         if(profesors.get(id1).getFriends().contains(p2) || profesors.get(id2).getFriends().contains(p1)){
             throw new Profesor.ConnectionAlreadyExistsException();
         }
+
         profesors.get(id1).addFriend(p2);
         profesors.get(id2).addFriend(p1);
-
         return this;
     }
 
-    /**
-     * returns a collection of casas de burrito favored by the friends of the received profesor,
-     * ordered by rating
-     *
-     * @param p - the profesor whom in relation to him, favored casas de burrito by his friends are considered
-     * */
+
     public Collection<CasaDeBurrito> favoritesByRating(Profesor p)
             throws Profesor.ProfesorNotInSystemException{
-        if(!profesors.containsKey(p.getId())) {
+        if(!profesors.containsKey(p.getId()))
             throw new Profesor.ProfesorNotInSystemException();
-        }
 
         ArrayList<CasaDeBurrito> restaurant_list=new ArrayList<>();
         List<Profesor> p_friends=p.getFriends().stream()

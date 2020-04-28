@@ -16,38 +16,22 @@ public class ProfesorImpl implements Profesor{
         favorite_resturants=new HashSet<>();
         friends=new HashSet<>();
     }
-    /**
-     * @return the id of the profesor.
-     * */
-    public int getId(){
-        return this.ID;
-    }
 
-    /**
-     * the profesor favorites a casa de burrito
-     *
-     * @return the object to allow concatenation of function calls.
-     * @param c - the casa de burrito being favored by the profesor
-     * */
-    public Profesor favorite(CasaDeBurrito c)
-            throws UnratedFavoriteCasaDeBurritoException{
+    public int getId(){  return this.ID; }
+
+
+    public Profesor favorite(CasaDeBurrito c) throws UnratedFavoriteCasaDeBurritoException{
         if(!c.isRatedBy(this)) throw new UnratedFavoriteCasaDeBurritoException();
         favorite_resturants.add(c);
         return this;
     }
 
-    /**
-     * @return the profesor's favorite casas de burrito
-     * */
+
     public Collection<CasaDeBurrito> favorites(){
         return new HashSet<>(favorite_resturants);
     }
 
-    /**
-     * adding a profesor as a friend
-     * @return the object to allow concatenation of function calls.
-     * @param p - the profesor being "friend-ed"
-     * */
+
     public Profesor addFriend(Profesor p)
             throws SameProfesorException, ConnectionAlreadyExistsException{
         if(this.equals(p)) throw new SameProfesorException();
@@ -56,73 +40,54 @@ public class ProfesorImpl implements Profesor{
         return this;
     }
 
-    /**
-     * @return the profesor's set of friends
-     * */
+
     public Set<Profesor> getFriends(){
         return new HashSet<>(friends);
     }
 
-    /**
-     * @return the profesor's set of friends, filtered by a predicate
-     * @param p - the predicate for filtering
-     * */
+
     public Set<Profesor> filteredFriends(Predicate<Profesor> p){
         return this.friends.stream().filter(p).collect(Collectors.toSet());
     }
 
-    /**
-     * @return the profesor's favorite casas de burrito,
-     * ordered by a Comparator, and filtered by a predicate.
-     * @param comp - a comparator for ordering
-     * @param p - a predicate for filtering
-     * */
+
+
     public Collection<CasaDeBurrito> filterAndSortFavorites(Comparator<CasaDeBurrito> comp, Predicate<CasaDeBurrito> p){
         return this.favorite_resturants.stream().filter(p).sorted(comp).collect(Collectors.toList());
     }
 
-    /**
-     * @return the profesor's favorite casas de burrito, ordered by rating.
-     * @param rLimit - the limit of rating under which casas de burrito will not be included.
-     * */
+/** Compare by the  natural Order of double, but from down to up **/
+  int double_comp (CasaDeBurrito c1 ,CasaDeBurrito c2){
+        double res =c2.averageRating() - c1.averageRating() ;
+      if(res > 0)  return 1;
+      if (res == 0) return 0;
+      else return -1; }
+
     public Collection<CasaDeBurrito> favoritesByRating(int rLimit){
-        return this.favorite_resturants.stream()
+      /** we must convert to list first in order to make sorted stable **/
+      List<CasaDeBurrito> list = new ArrayList<>(favorite_resturants);
+        return list.stream()
                 .filter(s->(s.averageRating()>=rLimit))
-                .sorted((s1,s2)-> s2.getId()-s1.getId())
-                .sorted((s1,s2)->s2.distance()-s1.distance())
-                .sorted((s1,s2)-> (int) (s2.averageRating()-s1.averageRating()))
+                .sorted(Comparator.comparingInt(CasaDeBurrito::getId))
+                .sorted(Comparator.comparingInt(CasaDeBurrito::distance))
+                .sorted( this::double_comp )
                 .collect(Collectors.toList());
     }
 
-    /**
-     * @return the profesor's favorite casas de burrito, ordered by distance and then rating.
-     * @param dLimit - the limit of distance above which casas de burrito will not be included.
-     * */
+
+
     public Collection<CasaDeBurrito> favoritesByDist(int dLimit){
-        return this.favorite_resturants.stream()
+        /** we must convert to list first in order to make sorted stable **/
+        List<CasaDeBurrito> list = new ArrayList<>(favorite_resturants);
+        return list.stream()
                 .filter(s->(s.distance()<=dLimit))
-                .sorted((s1,s2)-> s2.getId()-s1.getId())
-                .sorted((s1,s2)-> (int)(s1.averageRating()-s2.averageRating()))
+                .sorted((s1,s2)-> s1.getId()-s2.getId())
+                .sorted(this::double_comp)
                 .sorted(Comparator.comparingInt(CasaDeBurrito::distance))
                 .collect(Collectors.toList());
     }
 
-    /**
-     * @return the profesors's description as a string in the following format:
-     * <format>
-     * Profesor: <name>.
-     * Id: <id>.
-     * Favorites: <casaName1, casaName2, casaName3...>.
-     * </format>
-     * No newline at the end of the string.
-     * Note: favorite casas de burrito are ordered by lexicographical order, asc.
-     *
-     * Example:
-     *
-     * Profesor: Oren.
-     * Id: 236703.
-     * Favorites: BBB, Burger salon.
-     * */
+
 
     public String toString(){
         List<CasaDeBurrito> favorites_list=favorite_resturants.stream()
@@ -132,6 +97,7 @@ public class ProfesorImpl implements Profesor{
         for(CasaDeBurrito i:favorites_list){
             favs= favs + (i.getName()+", ");
         }
+        /** In case Menu_list is not empty we have to delete the last ','  **/
         if (favs.length() > 0 && favs.charAt(favs.length() - 2) == ',') {
             favs = favs.substring(0, favs.length() - 2);
         }
