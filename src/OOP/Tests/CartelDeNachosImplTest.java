@@ -274,12 +274,19 @@ public class CartelDeNachosImplTest {
         }
     }
 
+    @Test
+    public void favoritesByRating1(){
+        
 
+    }
 
     @Test
     public void favoritesByRating2() {
 
         CartelDeNachos cartel = new CartelDeNachosImpl();
+        Profesor prof1 = new ProfesorImpl(1, "Charlie");
+        Profesor prof2 = new ProfesorImpl(2, "Dee");
+        Profesor prof3 = new ProfesorImpl(3, "Mac");
 
         String[] menu1_array = {"Pizza", "Pasta", "Grappa"};
         Set<String> menu1 = new HashSet<>(Arrays.asList(menu1_array));
@@ -288,6 +295,10 @@ public class CartelDeNachosImplTest {
         String[] menu3_array = {"Dust", "Sorrow", "Difficult Homework"};
         Set<String> menu3 = new HashSet<>(Arrays.asList(menu3_array));
 
+        CasaDeBurrito casa1 = new CasaDeBurritoImpl(1, "Italian Casa", 60, menu1);
+        CasaDeBurrito casa2 = new CasaDeBurritoImpl(2, "American Casa", 30, menu2);
+        CasaDeBurrito casa3 = new CasaDeBurritoImpl(3, "Technion Student Casa", 60, menu3);
+        CasaDeBurrito casa4 = new CasaDeBurritoImpl(4, "Casa4", 60, menu3);
 
 
         //CasaDeBurrito casa5 = new CasaDeBurritoImpl(5, "Casa5", 60, menu3);
@@ -308,13 +319,13 @@ public class CartelDeNachosImplTest {
             casa2
          */
         try{
-            CasaDeBurrito casa1 = cartel.addCasaDeBurrito(1, "Italian Casa", 60, menu1);
-            CasaDeBurrito casa2 = cartel.addCasaDeBurrito(2, "American Casa", 30, menu2);
-            CasaDeBurrito casa3 = cartel.addCasaDeBurrito(3, "Technion Student Casa", 60, menu3);
-            CasaDeBurrito casa4 =cartel.addCasaDeBurrito(4, "Casa4", 60, menu3);
-            Profesor prof1 = cartel.joinCartel(1, "Charlie");
-            Profesor prof2 = cartel.joinCartel(2, "Dee");
-            Profesor prof3 = cartel.joinCartel(3, "Mac");
+            cartel.addCasaDeBurrito(1, "Italian Casa", 60, menu1);
+            cartel.addCasaDeBurrito(2, "American Casa", 30, menu2);
+            cartel.addCasaDeBurrito(3, "Technion Student Casa", 60, menu3);
+            cartel.addCasaDeBurrito(4, "Casa4", 60, menu3);
+            cartel.joinCartel(1, "Charlie");
+            cartel.joinCartel(2, "Dee");
+            cartel.joinCartel(3, "Mac");
             casa1.rate(prof1,4);
             casa3.rate(prof1,4);
             casa4.rate(prof3,5);
@@ -362,9 +373,9 @@ public class CartelDeNachosImplTest {
     public void favoritesByDist() {
 
         CartelDeNachos cartel = new CartelDeNachosImpl();
-        Profesor prof1 ;
-        Profesor prof2 ;
-        Profesor prof3 ;
+        Profesor prof1 = new ProfesorImpl(1, "Charlie");
+        Profesor prof2 = new ProfesorImpl(2, "Dee");
+        Profesor prof3 = new ProfesorImpl(3, "Mac");
 
         String[] menu1_array = {"Pizza", "Pasta", "Grappa"};
         Set<String> menu1 = new HashSet<>(Arrays.asList(menu1_array));
@@ -373,8 +384,10 @@ public class CartelDeNachosImplTest {
         String[] menu3_array = {"Dust", "Sorrow", "Difficult Homework"};
         Set<String> menu3 = new HashSet<>(Arrays.asList(menu3_array));
 
-
-
+        CasaDeBurrito casa1 = new CasaDeBurritoImpl(1, "Italian Casa", 60, menu1);
+        CasaDeBurrito casa2 = new CasaDeBurritoImpl(2, "American Casa", 30, menu2);
+        CasaDeBurrito casa3 = new CasaDeBurritoImpl(3, "Technion Student Casa", 60, menu3);
+        CasaDeBurrito casa4 = new CasaDeBurritoImpl(4, "Casa4", 60, menu3);
 
 
         //CasaDeBurrito casa5 = new CasaDeBurritoImpl(5, "Casa5", 60, menu3);
@@ -395,14 +408,14 @@ public class CartelDeNachosImplTest {
             casa4
          */
         try{
-            CasaDeBurrito  casa1 =cartel.addCasaDeBurrito(1, "Italian Casa", 60, menu1);
-            CasaDeBurrito  casa3 = cartel.addCasaDeBurrito(3, "Technion Student Casa", 60, menu3);
-            CasaDeBurrito  casa2 =cartel.addCasaDeBurrito(2, "American Casa", 30, menu2);
-            CasaDeBurrito  casa4 = cartel.addCasaDeBurrito(4, "Casa4", 60, menu3);
-            prof1 =cartel.joinCartel(1, "Charlie");
-            prof2 =cartel.joinCartel(2, "Dee");
-            prof3 =cartel.joinCartel(3, "Mac");
+            cartel.addCasaDeBurrito(3, "Technion Student Casa", 60, menu3);
+            cartel.addCasaDeBurrito(2, "American Casa", 30, menu2);
 
+            cartel.addCasaDeBurrito(4, "Casa4", 60, menu3);
+            cartel.joinCartel(1, "Charlie");
+            cartel.joinCartel(2, "Dee");
+            cartel.joinCartel(3, "Mac");
+            cartel.addCasaDeBurrito(1, "Italian Casa", 60, menu1);
             casa3.rate(prof1,4);
             casa1.rate(prof1,4);
             casa4.rate(prof3,5);
@@ -520,36 +533,19 @@ public class CartelDeNachosImplTest {
     @Test
     public void getMostPopularRestaurantsIds() throws Profesor.UnratedFavoriteCasaDeBurritoException, CasaDeBurrito.RateRangeException, Profesor.ProfesorNotInSystemException, Profesor.SameProfesorException, Profesor.ConnectionAlreadyExistsException {
 
-        /** example from the exercis **
-         * the profesors joined the cartel already in the setup
-         */
-        assertTrue(cartel.getMostPopularRestaurantsIds().size() == 3);
-        Iterator<Integer> iter = cartel.getMostPopularRestaurantsIds().iterator();
-        assertEquals(1, (int)iter.next() );
-        assertEquals(2, (int)iter.next() );
-        assertEquals(3, (int)iter.next() );
-
+        /** example from the exercis **/
+        assertTrue(cartel.getMostPopularRestaurantsIds().isEmpty() );
         casa1.rate(prof1, 1);
         prof1.favorite(casa1);
         casa2.rate(prof1, 1);
         prof1.favorite(casa2);
-        assertTrue(cartel.getMostPopularRestaurantsIds().size() == 3);
-        iter = cartel.getMostPopularRestaurantsIds().iterator();
-        assertEquals(1, (int)iter.next() );
-        assertEquals(2, (int)iter.next() );
-        assertEquals(3, (int)iter.next() );
-
+        assertTrue(cartel.getMostPopularRestaurantsIds().isEmpty() );
 
         casa1.rate(prof2, 2);
         prof2.favorite(casa1);
         casa2.rate(prof2, 2);
         prof2.favorite(casa2);
-        assertTrue(cartel.getMostPopularRestaurantsIds().size() == 3);
-        iter = cartel.getMostPopularRestaurantsIds().iterator();
-        assertEquals(1, (int)iter.next() );
-        assertEquals(2, (int)iter.next() );
-        assertEquals(3, (int)iter.next() );
-
+        assertTrue(cartel.getMostPopularRestaurantsIds().isEmpty() );
 
         casa3.rate(prof3, 3);
         prof3.favorite(casa3);
@@ -559,7 +555,7 @@ public class CartelDeNachosImplTest {
         cartel.addConnection(prof1,prof3);
         cartel.addConnection(prof1,prof2);
         assertEquals(1  ,cartel.getMostPopularRestaurantsIds().size() );
-        iter = cartel.getMostPopularRestaurantsIds().iterator();
+        Iterator<Integer> iter = cartel.getMostPopularRestaurantsIds().iterator();
 
         assertEquals(1, (int)iter.next() );
 
@@ -584,7 +580,9 @@ public class CartelDeNachosImplTest {
     @Test
     public void toStringTest() {
         CartelDeNachos cartel = new CartelDeNachosImpl();
-
+        Profesor prof1 = new ProfesorImpl(1, "Charlie");
+        Profesor prof2 = new ProfesorImpl(2, "Dee");
+        Profesor prof3 = new ProfesorImpl(3, "Mac");
 
         String[] menu1_array = {"Pizza", "Pasta", "Grappa"};
         Set<String> menu1 = new HashSet<>(Arrays.asList(menu1_array));
@@ -593,6 +591,10 @@ public class CartelDeNachosImplTest {
         String[] menu3_array = {"Dust", "Sorrow", "Difficult Homework"};
         Set<String> menu3 = new HashSet<>(Arrays.asList(menu3_array));
 
+        CasaDeBurrito casa1 = new CasaDeBurritoImpl(1, "Italian Casa", 60, menu1);
+        CasaDeBurrito casa2 = new CasaDeBurritoImpl(2, "American Casa", 30, menu2);
+        CasaDeBurrito casa3 = new CasaDeBurritoImpl(3, "Technion Student Casa", 60, menu3);
+        CasaDeBurrito casa4 = new CasaDeBurritoImpl(4, "Casa4", 60, menu3);
 
         String myString="Registered profesores: 1, 2, 3.\nRegistered casas de burrito: 1, 2, 3, 4.\nProfesores:\n1 -> [2].\n2 -> [1, 3].\n3 -> [2].\nEnd profesores.";
 
@@ -611,9 +613,9 @@ public class CartelDeNachosImplTest {
             cartel.addCasaDeBurrito(2, "American Casa", 30, menu2);
 
             cartel.addCasaDeBurrito(4, "Casa4", 60, menu3);
-            Profesor prof1 = cartel.joinCartel(1, "Charlie");
-            Profesor prof2 = cartel.joinCartel(2, "Dee");
-            Profesor prof3 = cartel.joinCartel(3, "Mac");
+            cartel.joinCartel(1, "Charlie");
+            cartel.joinCartel(2, "Dee");
+            cartel.joinCartel(3, "Mac");
             cartel.addCasaDeBurrito(1, "Italian Casa", 60, menu1);
             cartel.addConnection(prof2,prof1);
             cartel.addConnection(prof2,prof3);

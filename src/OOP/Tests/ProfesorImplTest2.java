@@ -86,6 +86,7 @@ public class ProfesorImplTest2 {
 			r2.rate(s1, 1).rate(s2, 2);
 			r3.rate(s1, 1).rate(s2, 2).rate(s3, 3);
 			r4.rate(s1, 1).rate(s2, 2).rate(s3, 3).rate(s4, 4);
+			
 			try {
 				s4.favorite(r1);
 				fail("UnratedFavoriteCasaDeBurritoException should be thrown");
