@@ -216,12 +216,14 @@ public class CartelDeNachosImpl implements CartelDeNachos{
         }
         // now we have a map with id of casa and casascore.
 
-        if(casas.isEmpty()) //in case the casa are empty
-            return  new LinkedList<>();
+        if(casas.isEmpty()) //in case the casa are empty so all the resturans have a score of zero
+            return resturants.values().stream().map((ca) ->  ca.getId()).sorted().collect(Collectors.toList());
         /** sorting and filtering the map to get the list **/
         Comparator<CasaWithScore> comparator = Comparator.comparingInt(c -> c.score);
         CasaWithScore c = casas.values().stream().max(comparator).get();
         int max = c.score;
+        if(max == 0)
+            return resturants.values().stream().map((ca) ->  ca.getId()).sorted().collect(Collectors.toList());
         return casas.values().stream().filter( (ca)-> ca.score == max).map( (ca) ->  ca.casa.getId() )
                 .sorted().collect(Collectors.toList());
 

@@ -57,7 +57,7 @@ public class ProfesorImpl implements Profesor{
     }
 
 /** Compare by the  natural Order of double, but from down to up **/
-  int double_comp (CasaDeBurrito c1 ,CasaDeBurrito c2){
+ int double_comp (CasaDeBurrito c1 ,CasaDeBurrito c2){
         double res =c2.averageRating() - c1.averageRating() ;
       if(res > 0)  return 1;
       if (res == 0) return 0;
